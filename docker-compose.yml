@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   stats-server:
-    build: ./ewm-stats/service
+    build: ewm-stats/service
     image: stats-server
     ports:
       - "9090:9090"
@@ -9,12 +9,12 @@ services:
       - stats-db
     environment:
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-      - SPRING_DATASOURCE_DB_NAME=statsDB
-      - SPRING_DATASOURCE_USERNAME=test
-      - SPRING_DATASOURCE_PASSWORD=test
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statsDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
 
   stats-db:
-    image: postgres:14-alpine
+    image: postgres:16.1-alpine
     container_name: stats-db
     ports:
       - "6541:5432"
@@ -24,7 +24,7 @@ services:
       - POSTGRES_PASSWORD=test
 
   ewm-service:
-    build: ./ewm-main
+    build: ewm-main
     image: ewm-service
     ports:
       - "8080:8080"
@@ -32,15 +32,15 @@ services:
       - ewm-db
     environment:
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-      - SPRING_DATASOURCE_DB_NAME=ewmDB
-      - SPRING_DATASOURCE_USERNAME=test
-      - SPRING_DATASOURCE_PASSWORD=test
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
 
   ewm-db:
-    image: postgres:14-alpine
+    image: postgres:16.1-alpine
     container_name: ewm-db
     ports:
-      - "6542:5433"
+      - "6542:5432"
     environment:
       - POSTGRES_DB=ewmDB
       - POSTGRES_USER=test

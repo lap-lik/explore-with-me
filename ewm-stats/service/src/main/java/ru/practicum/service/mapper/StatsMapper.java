@@ -9,6 +9,7 @@ import static ru.practicum.service.model.StatsConstant.DATE_TIME_PATTERN;
 
 @Mapper(componentModel = "spring")
 public interface StatsMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "timestamp", source = "timestamp", dateFormat = DATE_TIME_PATTERN)
     Stats inputDTOToEntity(StatsInputDTO inputDTO);
 }
