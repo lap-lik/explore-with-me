@@ -8,7 +8,6 @@
     </parent>
 
     <artifactId>stats-dto</artifactId>
-
     <name>stats-dto</name>
 
     <properties>

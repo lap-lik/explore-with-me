@@ -1,3 +1,3 @@
 FROM amazoncorretto:11-alpine-jdk
-COPY target/*.jar ewm-stats/stats-service.jar
-ENTRYPOINT ["java", "-jar", "ewm-stats/stats-service.jar"]
+COPY target/*.jar ewm-stats-service.jar
+ENTRYPOINT ["java", "-jar", "ewm-stats-service.jar"]

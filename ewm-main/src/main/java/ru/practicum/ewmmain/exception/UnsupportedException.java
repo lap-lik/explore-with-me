@@ -1,11 +1,11 @@
-package ru.practicum.service.exception;
+package ru.practicum.ewmmain.exception;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class BadRequestException extends RuntimeException {
+public class UnsupportedException extends RuntimeException {
 
     private final String message;
 }

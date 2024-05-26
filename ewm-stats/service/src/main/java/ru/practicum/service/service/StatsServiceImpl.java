@@ -12,7 +12,6 @@ import ru.practicum.service.model.StatsProjection;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,23 +53,16 @@ public class StatsServiceImpl implements StatsService {
     }
 
     private List<StatsOutputDTO> toStatsOutputDTOs(List<StatsProjection> stats) {
-        Map<String, StatsOutputDTO> statsDTOMap = new HashMap<>();
+        Map<String, Long> countHitsMap = stats.stream()
+                .collect(Collectors.groupingBy(stat -> stat.getApp() + "_" + stat.getUri(),
+                        Collectors.summingLong(stat -> 1)));
 
-        for (StatsProjection stat : stats) {
-            String key = stat.getApp() + "_" + stat.getUri();
-            if (!statsDTOMap.containsKey(key)) {
-                statsDTOMap.put(key, StatsOutputDTO.builder()
-                        .app(stat.getApp())
-                        .uri(stat.getUri())
-                        .hits(1L)
-                        .build());
-            } else {
-                StatsOutputDTO dto = statsDTOMap.get(key);
-                dto.setHits(dto.getHits() + 1);
-            }
-        }
-
-        return statsDTOMap.values().stream()
+        return countHitsMap.entrySet().stream()
+                .map(e -> StatsOutputDTO.builder()
+                        .app(e.getKey().split("_")[0])
+                        .uri(e.getKey().split("_")[1])
+                        .hits(e.getValue())
+                        .build())
                 .sorted(Comparator.comparingLong(StatsOutputDTO::getHits).reversed())
                 .collect(Collectors.toList());
     }
