@@ -7,31 +7,55 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.practicum.ewmmain.category.controller.CategoryAdminController;
+import ru.practicum.ewmmain.category.controller.CategoryPublicController;
 import ru.practicum.ewmmain.exception.NotFoundException;
 import ru.practicum.ewmmain.exception.NotImplementedException;
 import ru.practicum.ewmmain.exception.UnsupportedException;
 import ru.practicum.ewmmain.exception.ValidException;
 
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static ru.practicum.ewmmain.constant.Constant.DATE_TIME_PATTERN;
+
 @Slf4j
-@RestControllerAdvice(assignableTypes = {})
+@RestControllerAdvice(assignableTypes = {CategoryAdminController.class, CategoryPublicController.class})
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ValidException.class, ConstraintViolationException.class})
-    public ErrorResponse onValidateErrorException(final RuntimeException exception) {
+    public ErrorResponse onValidException(final RuntimeException exception) {
 
         log.warn("Exception1: {}, Validation error(s): \n{}", exception.getClass().getName(),
                 getExceptionMessage(exception));
+        LocalDateTime now = LocalDateTime.now();
 
         return ErrorResponse.builder()
-                .error(exception.getClass().getName())
+                .status(HttpStatus.BAD_REQUEST.name())
+                .reason("Incorrectly made request.")
                 .message(exception.getMessage())
+                .timestamp(DATE_TIME_PATTERN)
                 .build();
     }
+
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ErrorResponse onConstraintViolationException(final RuntimeException exception) {
+//
+//        log.warn("Exception1: {}, ConstraintViolation error(s): \n{}", exception.getClass().getName(),
+//                getExceptionMessage(exception));
+//
+//        return ErrorResponse.builder()
+//                .status(HttpStatus.BAD_REQUEST.name())
+//                .reason("Incorrectly made request.")
+//                .message(exception.getMessage())
+//                .timestamp(LocalDateTime.now().toString().replace("T", " "))
+//                .build();
+//    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UnsupportedException.class})
@@ -41,7 +65,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()
-                .error(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.name())
+                .reason("Incorrectly made request.")
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -52,8 +79,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         log.warn("Exception: {}, Not found: \n{}", exception.getClass().getName(), getExceptionMessage(exception));
 
         return ErrorResponse.builder()
-                .error(exception.getClass().getName())
+                .status(HttpStatus.NOT_FOUND.name())
+                .reason("The required object was not found.")
                 .message(exception.getMessage())
+                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -65,8 +94,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()
-                .error(exception.getClass().getName())
+                .status(HttpStatus.NOT_FOUND.name())
+                .reason("The required object was not found.")
                 .message(exception.getMessage())
+                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -77,8 +108,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         log.error("Exception: {}, message(s): \n{}", exception.getClass().getName(), getExceptionMessage(exception));
 
         return ErrorResponse.builder()
-                .error(exception.getClass().getName())
+                .status(HttpStatus.NOT_FOUND.name())
+                .reason("The required object was not found.")
                 .message(exception.getMessage())
+                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 

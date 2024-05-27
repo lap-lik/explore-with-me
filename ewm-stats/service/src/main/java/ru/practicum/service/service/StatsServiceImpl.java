@@ -36,17 +36,20 @@ public class StatsServiceImpl implements StatsService {
         if (start.isAfter(end)) {
             throw ValidException.builder().message("Start date cannot be after end date").build();
         }
-
         if (unique) {
             if (uris == null) {
+                System.err.println(1);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionUniqueIp(start, end));
             } else {
+                System.err.println(2);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionUniqueIpAndUriIn(start, end, uris));
             }
         } else {
             if (uris == null) {
+                System.err.println(3);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionByTimestampBetween(start, end));
             } else {
+                System.err.println(4);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionByTimestampBetweenAndUriIn(start, end, uris));
             }
         }

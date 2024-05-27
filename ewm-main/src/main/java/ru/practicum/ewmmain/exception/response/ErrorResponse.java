@@ -8,6 +8,8 @@ import lombok.ToString;
 @ToString
 @Builder
 public class ErrorResponse {
-    private String error;
+    private String status;
+    private String reason;
     private String message;
+    private String timestamp;
 }
