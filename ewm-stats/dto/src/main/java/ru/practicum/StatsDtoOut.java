@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder(toBuilder = true)
-public class StatsOutputDTO {
+public class StatsDtoOut {
 
     private String app;
     private String uri;

@@ -2,8 +2,8 @@ package ru.practicum.ewmmain.category.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.ewmmain.category.dto.CategoryInputDTO;
-import ru.practicum.ewmmain.category.dto.CategoryOutputDTO;
+import ru.practicum.ewmmain.category.dto.CategoryDtoIn;
+import ru.practicum.ewmmain.category.dto.CategoryDtoOut;
 import ru.practicum.ewmmain.category.model.Category;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public interface CategoryMapper {
 
     @Mapping(target = "id", ignore = true)
-    Category inputDTOToEntity(CategoryInputDTO inputDTO);
+    Category inputDTOToEntity(CategoryDtoIn inputDTO);
 
-    CategoryOutputDTO entityToOutputDTO(Category entity);
+    CategoryDtoOut entityToOutputDTO(Category entity);
 
-    List<CategoryOutputDTO> entitiesToOutputDTOs(List<Category> entities);
+    List<CategoryDtoOut> entitiesToOutputDTOs(List<Category> entities);
 }

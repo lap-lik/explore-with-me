@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CategoryOutputDTO {
+public class CategoryDtoOut {
 
     private Long id;
+
     private String name;
 }

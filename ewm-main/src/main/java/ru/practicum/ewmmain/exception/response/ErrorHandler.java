@@ -3,6 +3,7 @@ package ru.practicum.ewmmain.exception.response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,62 +14,78 @@ import ru.practicum.ewmmain.exception.NotFoundException;
 import ru.practicum.ewmmain.exception.NotImplementedException;
 import ru.practicum.ewmmain.exception.UnsupportedException;
 import ru.practicum.ewmmain.exception.ValidException;
+import ru.practicum.ewmmain.user.controller.UserAdminController;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewmmain.constant.Constant.DATE_TIME_PATTERN;
-
 @Slf4j
-@RestControllerAdvice(assignableTypes = {CategoryAdminController.class, CategoryPublicController.class})
+@RestControllerAdvice(assignableTypes =
+        {CategoryAdminController.class,
+                CategoryPublicController.class,
+                UserAdminController.class
+        })
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ValidException.class, ConstraintViolationException.class})
+    @ExceptionHandler(ValidException.class)
     public ErrorResponse onValidException(final RuntimeException exception) {
 
         log.warn("Exception1: {}, Validation error(s): \n{}", exception.getClass().getName(),
                 getExceptionMessage(exception));
-        LocalDateTime now = LocalDateTime.now();
 
         return ErrorResponse.builder()
+                .errors(convertStackTraceToStringList(exception))
                 .status(HttpStatus.BAD_REQUEST.name())
                 .reason("Incorrectly made request.")
                 .message(exception.getMessage())
-                .timestamp(DATE_TIME_PATTERN)
                 .build();
     }
 
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    public ErrorResponse onConstraintViolationException(final RuntimeException exception) {
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ErrorResponse onMethodArgumentNotValidException(final RuntimeException exception) {
 //
-//        log.warn("Exception1: {}, ConstraintViolation error(s): \n{}", exception.getClass().getName(),
+//        log.warn("Exception1: {}, MethodArgumentNotValid error(s): \n{}", exception.getClass().getName(),
 //                getExceptionMessage(exception));
 //
 //        return ErrorResponse.builder()
-//                .status(HttpStatus.BAD_REQUEST.name())
-//                .reason("Incorrectly made request.")
+//                .errors(convertStackTraceToStringList(exception))
+//                .status(HttpStatus.FORBIDDEN.name())
+//                .reason("For the requested operation the conditions are not met.")
 //                .message(exception.getMessage())
-//                .timestamp(LocalDateTime.now().toString().replace("T", " "))
 //                .build();
 //    }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ErrorResponse onConstraintViolationException(final RuntimeException exception) {
+
+        log.warn("Exception1: {}, ConstraintViolation error(s): \n{}", exception.getClass().getName(),
+                getExceptionMessage(exception));
+
+        return ErrorResponse.builder()
+                .errors(convertStackTraceToStringList(exception))
+                .status(HttpStatus.BAD_REQUEST.name())
+                .reason("Incorrectly made request.")
+                .message(exception.getMessage())
+                .build();
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({UnsupportedException.class})
+    @ExceptionHandler(UnsupportedException.class)
     public ErrorResponse onUnsupportedException(final RuntimeException exception) {
 
         log.warn("Exception: {}, Unsupported error(s): \n{}", exception.getClass().getName(),
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()
+                .errors(convertStackTraceToStringList(exception))
                 .status(HttpStatus.BAD_REQUEST.name())
                 .reason("Incorrectly made request.")
                 .message(exception.getMessage())
-                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -79,10 +96,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         log.warn("Exception: {}, Not found: \n{}", exception.getClass().getName(), getExceptionMessage(exception));
 
         return ErrorResponse.builder()
+                .errors(convertStackTraceToStringList(exception))
                 .status(HttpStatus.NOT_FOUND.name())
-                .reason("The required object was not found.")
+                .reason("The required object was not found. ")
                 .message(exception.getMessage())
-                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -94,10 +111,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()
-                .status(HttpStatus.NOT_FOUND.name())
-                .reason("The required object was not found.")
+                .errors(convertStackTraceToStringList(exception))
+                .status(HttpStatus.CONFLICT.name())
+                .reason("Integrity constraint has been violated.")
                 .message(exception.getMessage())
-                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -108,10 +125,10 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         log.error("Exception: {}, message(s): \n{}", exception.getClass().getName(), getExceptionMessage(exception));
 
         return ErrorResponse.builder()
-                .status(HttpStatus.NOT_FOUND.name())
-                .reason("The required object was not found.")
+                .errors(convertStackTraceToStringList(exception))
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                .reason("Incorrectly made request.")
                 .message(exception.getMessage())
-                .timestamp(LocalDateTime.now().toString().replace("T", " "))
                 .build();
     }
 
@@ -120,5 +137,12 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         return Arrays.stream(exception.getMessage().split("&"))
                 .map(message -> "- " + message.trim())
                 .collect(Collectors.joining("\n"));
+    }
+
+    private List<String> convertStackTraceToStringList(Throwable exception) {
+
+        return Arrays.stream(exception.getStackTrace())
+                .map(StackTraceElement::toString)
+                .collect(Collectors.toList());
     }
 }

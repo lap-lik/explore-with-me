@@ -3,14 +3,16 @@ package ru.practicum.ewmmain.category.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewmmain.category.dto.CategoryInputDTO;
-import ru.practicum.ewmmain.category.dto.CategoryOutputDTO;
+import ru.practicum.ewmmain.category.dto.CategoryDtoIn;
+import ru.practicum.ewmmain.category.dto.CategoryDtoOut;
 import ru.practicum.ewmmain.category.service.CategoryService;
 
 import javax.validation.Valid;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/categories")
@@ -20,7 +22,7 @@ public class CategoryAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryOutputDTO createCategory(@Valid @RequestBody final CategoryInputDTO inputDTO) {
+    public CategoryDtoOut createCategory(@Valid @RequestBody final CategoryDtoIn inputDTO) {
 
         log.info("START endpoint `method:POST /admin/categories` (create category), category name: {}.", inputDTO.getName());
 
@@ -38,8 +40,8 @@ public class CategoryAdminController {
 
 
     @PatchMapping("/{catId}")
-    public CategoryOutputDTO updateCategory(@PathVariable long catId,
-                                            @Valid @RequestBody final CategoryInputDTO inputDTO) {
+    public CategoryDtoOut updateCategory(@PathVariable long catId,
+                                         @Valid @RequestBody final CategoryDtoIn inputDTO) {
 
         log.info("START endpoint `method:PATCH /admin/categories/{catId}` (update category), category id: {}.", catId);
 

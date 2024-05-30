@@ -2,9 +2,10 @@ package ru.practicum.ewmmain.category.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewmmain.category.dao.CategoryDAO;
-import ru.practicum.ewmmain.category.dto.CategoryInputDTO;
-import ru.practicum.ewmmain.category.dto.CategoryOutputDTO;
+import ru.practicum.ewmmain.category.dto.CategoryDtoIn;
+import ru.practicum.ewmmain.category.dto.CategoryDtoOut;
 import ru.practicum.ewmmain.category.mapper.CategoryMapper;
 import ru.practicum.ewmmain.exception.NotFoundException;
 
@@ -12,27 +13,22 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryDAO dao;
     private final CategoryMapper mapper;
 
     @Override
-    public CategoryOutputDTO create(CategoryInputDTO inputDTO) {
+    @Transactional
+    public CategoryDtoOut create(CategoryDtoIn inputDTO) {
 
         return mapper.entityToOutputDTO(dao.save(mapper.inputDTOToEntity(inputDTO)));
     }
 
     @Override
-    public void delete(long catId) {
-
-        checkExistsCategoryById(catId);
-
-        dao.deleteById(catId);
-    }
-
-    @Override
-    public CategoryOutputDTO update(long catId, CategoryInputDTO inputDTO) {
+    @Transactional
+    public CategoryDtoOut update(long catId, CategoryDtoIn inputDTO) {
 
         checkExistsCategoryById(catId);
         inputDTO.setId(catId);
@@ -41,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryOutputDTO get(long catId) {
+    public CategoryDtoOut get(long catId) {
 
         checkExistsCategoryById(catId);
         return mapper.entityToOutputDTO(dao.findById(catId)
@@ -51,13 +47,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryOutputDTO> getAll(int from, int size) {
+    public List<CategoryDtoOut> getAll(int from, int size) {
 
-        return mapper.entitiesToOutputDTOs(dao.findll(from, size));
+        return mapper.entitiesToOutputDTOs(dao.findAll(from, size));
     }
 
+    @Override
+    @Transactional
+    public void delete(long catId) {
+
+        checkExistsCategoryById(catId);
+        dao.deleteById(catId);
+    }
 
     private void checkExistsCategoryById(long catId) {
+
         boolean isExist = dao.existsById(catId);
         if (!isExist) {
             throw NotFoundException.builder()

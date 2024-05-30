@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder(toBuilder = true)
-public class StatsInputDTO {
+public class StatsDtoIn {
 
     @NotBlank(message = "The app field cannot be empty.")
     private String app;

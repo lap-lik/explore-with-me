@@ -11,6 +11,6 @@ public interface CategoryDAO extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT * " +
             "FROM categories " +
-            "LIMIT :limit OFFSET :offset", nativeQuery = true)
-    List<Category> findll(@Param("offset") int offset, @Param("limit") int limit);
+            "LIMIT :size OFFSET :from", nativeQuery = true)
+    List<Category> findAll(@Param("from") int from, @Param("size") int size);
 }

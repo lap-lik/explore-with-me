@@ -3,8 +3,8 @@ package ru.practicum.service.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.StatsInputDTO;
-import ru.practicum.StatsOutputDTO;
+import ru.practicum.StatsDtoIn;
+import ru.practicum.StatsDtoOut;
 import ru.practicum.service.dao.StatsDAO;
 import ru.practicum.service.exception.ValidException;
 import ru.practicum.service.mapper.StatsMapper;
@@ -25,48 +25,45 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     @Transactional
-    public void create(StatsInputDTO inputDTO) {
+    public void create(StatsDtoIn inputDTO) {
 
         statsDAO.save(mapper.inputDTOToEntity(inputDTO));
     }
 
     @Override
-    public List<StatsOutputDTO> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public List<StatsDtoOut> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
 
         if (start.isAfter(end)) {
             throw ValidException.builder().message("Start date cannot be after end date").build();
         }
         if (unique) {
             if (uris == null) {
-                System.err.println(1);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionUniqueIp(start, end));
             } else {
-                System.err.println(2);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionUniqueIpAndUriIn(start, end, uris));
             }
         } else {
             if (uris == null) {
-                System.err.println(3);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionByTimestampBetween(start, end));
             } else {
-                System.err.println(4);
                 return toStatsOutputDTOs(statsDAO.findAllStatsProjectionByTimestampBetweenAndUriIn(start, end, uris));
             }
         }
     }
 
-    private List<StatsOutputDTO> toStatsOutputDTOs(List<StatsProjection> stats) {
+    private List<StatsDtoOut> toStatsOutputDTOs(List<StatsProjection> stats) {
+
         Map<String, Long> countHitsMap = stats.stream()
                 .collect(Collectors.groupingBy(stat -> stat.getApp() + "_" + stat.getUri(),
                         Collectors.summingLong(stat -> 1)));
 
         return countHitsMap.entrySet().stream()
-                .map(e -> StatsOutputDTO.builder()
+                .map(e -> StatsDtoOut.builder()
                         .app(e.getKey().split("_")[0])
                         .uri(e.getKey().split("_")[1])
                         .hits(e.getValue())
                         .build())
-                .sorted(Comparator.comparingLong(StatsOutputDTO::getHits).reversed())
+                .sorted(Comparator.comparingLong(StatsDtoOut::getHits).reversed())
                 .collect(Collectors.toList());
     }
 }

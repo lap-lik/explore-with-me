@@ -6,8 +6,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.StatsInputDTO;
-import ru.practicum.StatsOutputDTO;
+import ru.practicum.StatsDtoIn;
+import ru.practicum.StatsDtoOut;
 import ru.practicum.service.service.StatsService;
 
 import javax.validation.Valid;
@@ -26,7 +26,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    void createStats(@Valid @RequestBody final StatsInputDTO inputDTO) {
+    void createStats(@Valid @RequestBody final StatsDtoIn inputDTO) {
 
         log.info("START endpoint `method:POST /hit` (create stats), for uri: {}.", inputDTO.getUri());
 
@@ -34,10 +34,10 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    List<StatsOutputDTO> getStats(@RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
-                                  @RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime end,
-                                  @RequestParam(required = false) List<String> uris,
-                                  @RequestParam(defaultValue = "false") boolean unique) {
+    List<StatsDtoOut> getStats(@RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
+                               @RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime end,
+                               @RequestParam(required = false) List<String> uris,
+                               @RequestParam(defaultValue = "false") boolean unique) {
 
         log.info("START endpoint `method:GET /stats` (get all stats).");
 

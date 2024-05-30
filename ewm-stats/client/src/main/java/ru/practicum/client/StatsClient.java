@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.StatsInputDTO;
-import ru.practicum.StatsOutputDTO;
+import ru.practicum.StatsDtoIn;
+import ru.practicum.StatsDtoOut;
 import ru.practicum.exception.ClientException;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class StatsClient {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public StatsClient(@Value("${STATS_SERVER_URL}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
 
         restTemplate = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
@@ -35,7 +35,7 @@ public class StatsClient {
                 .build();
     }
 
-    public void postStats(StatsInputDTO inputDTO) {
+    public void postStats(StatsDtoIn inputDTO) {
         if (inputDTO == null) {
             throw new IllegalArgumentException("Stats input data cannot be null");
         }
@@ -47,11 +47,11 @@ public class StatsClient {
         }
     }
 
-    public List<StatsOutputDTO> getStats(String start, String end, List<String> uris, boolean unique) {
+    public List<StatsDtoOut> getStats(String start, String end, List<String> uris, boolean unique) {
         String url = String.format(GET_PATCH, start, end, uris, unique);
 
         try {
-            ResponseEntity<StatsOutputDTO[]> response = restTemplate.getForEntity(url, StatsOutputDTO[].class);
+            ResponseEntity<StatsDtoOut[]> response = restTemplate.getForEntity(url, StatsDtoOut[].class);
 
             return (response.getBody() != null) ? Arrays.asList(response.getBody()) : Collections.emptyList();
         } catch (HttpStatusCodeException e) {
