@@ -21,11 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RestControllerAdvice(assignableTypes =
-        {CategoryAdminController.class,
-                CategoryPublicController.class,
-                UserAdminController.class
-        })
+@RestControllerAdvice(assignableTypes = {CategoryAdminController.class,
+        CategoryPublicController.class,
+        UserAdminController.class})
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClientImpl;
 import ru.practicum.StatsDtoOut;
-import ru.practicum.StatsClient;
 import ru.practicum.category.dao.CategoryDAO;
 import ru.practicum.event.dao.EventDAO;
 import ru.practicum.event.dao.LocationDAO;

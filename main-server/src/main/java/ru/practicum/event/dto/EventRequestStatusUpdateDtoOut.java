@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.practicum.request.dto.ParticipationDtoOut;
 
 import java.util.List;
+
 @Data
 public class EventRequestStatusUpdateDtoOut {
 
