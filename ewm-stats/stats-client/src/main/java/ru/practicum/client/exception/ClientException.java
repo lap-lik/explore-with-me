@@ -1,4 +1,4 @@
-package ru.practicum.exception;
+package ru.practicum.client.exception;
 
 import lombok.Builder;
 import lombok.Getter;

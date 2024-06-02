@@ -13,15 +13,18 @@ public interface RequestDAO extends JpaRepository<Request, Long> {
 
     List<Request> findAllByRequester_IdOrderByCreatedDesc(long requesterId);
 
-//    @Query("INSERT Requests " +
-//            "SET status = :status " +
-//            "WHERE id = :requestId and requester_id = :requesterId")
-//    Request updateStatusAtCanceled(@Param("requestId") long requestId,
-//                                   @Param("requesterId")  long requesterId,
-//                                   @Param("status") String status);
-
     @Modifying
-    @Query("UPDATE Request r SET r.status = :newState WHERE r.id = :requestId AND r.requester.id = :requesterId")
-    Optional<Request> updateStatusAtCanceled(Long requestId, Long requesterId, String newState);
+    @Query("UPDATE Request r " +
+            "SET r.status = :status " +
+            "WHERE r.id = :requestId AND r.requester.id = :requesterId")
+    Optional<Request> updateStatusAtCanceled(@Param("requestId") Long requestId,
+                                             @Param("requesterId") Long requesterId,
+                                             @Param("status") String status);
+
+    @Query("SELECT r " +
+            "FROM Request r " +
+            "WHERE r.event.id IN :eventIds AND r.status = :status")
+    List<Request> findAllByEvent_IdInAndStatus(@Param("eventIds") List<Long> eventIds,
+                                               @Param("status") String status);
 }
 

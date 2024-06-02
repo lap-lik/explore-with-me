@@ -3,6 +3,7 @@ package ru.practicum.ewmmain.event.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,11 +27,12 @@ public class EventDtoIn {
     @NotNull(message = "The location field cannot be null.")
     private LocationDto location;
 
-    private boolean paid;
+    private Boolean paid = false;
 
-    private int participantLimit;
+    @Min(value = 0, message = "The participantLimit field cannot be less than 0.")
+    private int participantLimit = 0;
 
-    private boolean requestModeration;
+    private Boolean requestModeration = true;
 
     @NotBlank(message = "The title must not be empty.")
     @Length(min = 3, max = 120, message = "The minimum length of the title is 3, the maximum is 120.")

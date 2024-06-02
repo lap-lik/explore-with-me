@@ -30,7 +30,7 @@ public class CategoryPublicController {
     }
 
     @GetMapping("/{catId}")
-    public CategoryDtoOut getCategoryById(@PathVariable long catId) {
+    public CategoryDtoOut getCategoryById(@PathVariable @Positive final long catId) {
 
         log.info("START endpoint `method:GET /categories/{catId}` (get category by id), category id: {}.", catId);
 

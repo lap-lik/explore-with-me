@@ -1,6 +1,7 @@
 package ru.practicum.ewmmain.event.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.ewmmain.category.model.Category;
 import ru.practicum.ewmmain.user.model.User;
@@ -31,9 +32,7 @@ public class Event {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
-    @Column(name = "confirmed_requests")
-    private Long confirmedRequests;
-
+    @CreationTimestamp
     @Column(name = "created_on", nullable = false)
     @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime createdOn;
@@ -72,7 +71,4 @@ public class Event {
 
     @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
-    private Long views;
 }

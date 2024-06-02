@@ -10,6 +10,7 @@ import ru.practicum.ewmmain.category.dto.CategoryDtoOut;
 import ru.practicum.ewmmain.category.service.CategoryService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @Slf4j
 @Validated
@@ -31,7 +32,7 @@ public class CategoryAdminController {
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable long catId) {
+    public void deleteCategory(@PathVariable @Positive final long catId) {
 
         log.info("START endpoint `method:DELETE /admin/categories/{catId}` (delete category), category id: {}.", catId);
 
@@ -40,7 +41,7 @@ public class CategoryAdminController {
 
 
     @PatchMapping("/{catId}")
-    public CategoryDtoOut updateCategory(@PathVariable long catId,
+    public CategoryDtoOut updateCategory(@PathVariable @Positive final long catId,
                                          @Valid @RequestBody final CategoryDtoIn inputDTO) {
 
         log.info("START endpoint `method:PATCH /admin/categories/{catId}` (update category), category id: {}.", catId);

@@ -8,14 +8,15 @@
     </parent>
 
     <artifactId>ewm-stats</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ewm-stats</name>
 
     <modules>
-        <module>client</module>
-        <module>dto</module>
-        <module>service</module>
+        <module>stats-client</module>
+        <module>stats-dto</module>
+        <module>stats-service</module>
     </modules>
 
     <properties>

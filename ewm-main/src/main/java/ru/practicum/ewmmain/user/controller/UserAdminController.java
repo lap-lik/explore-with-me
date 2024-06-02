@@ -36,7 +36,7 @@ public class UserAdminController {
     @GetMapping
     public List<UserDtoOut> getUsers(@RequestParam(required = false) List<Long> ids,
                                      @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                     @RequestParam(defaultValue = "20") @Positive int size) {
+                                     @RequestParam(defaultValue = "10") @Positive int size) {
 
         log.info("START endpoint `method:GET /admin/users` (get users by id list), id list size: {}.", ids.size());
 
@@ -45,7 +45,7 @@ public class UserAdminController {
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable long userId) {
+    public void deleteUser(@PathVariable @Positive final long userId) {
 
         log.info("START endpoint `method:DELETE /admin/users/{userId}` (delete user), user id: {}.", userId);
 

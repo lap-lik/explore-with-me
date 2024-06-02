@@ -3,7 +3,6 @@ package ru.practicum.ewmmain.exception.response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,7 +32,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ValidException.class)
     public ErrorResponse onValidException(final RuntimeException exception) {
 
-        log.warn("Exception1: {}, Validation error(s): \n{}", exception.getClass().getName(),
+        log.warn("Exception: {}, Validation error(s): \n{}", exception.getClass().getName(),
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()
@@ -44,26 +43,12 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ErrorResponse onMethodArgumentNotValidException(final RuntimeException exception) {
-//
-//        log.warn("Exception1: {}, MethodArgumentNotValid error(s): \n{}", exception.getClass().getName(),
-//                getExceptionMessage(exception));
-//
-//        return ErrorResponse.builder()
-//                .errors(convertStackTraceToStringList(exception))
-//                .status(HttpStatus.FORBIDDEN.name())
-//                .reason("For the requested operation the conditions are not met.")
-//                .message(exception.getMessage())
-//                .build();
-//    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorResponse onConstraintViolationException(final RuntimeException exception) {
 
-        log.warn("Exception1: {}, ConstraintViolation error(s): \n{}", exception.getClass().getName(),
+        log.warn("Exception: {}, ConstraintViolation error(s): \n{}", exception.getClass().getName(),
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()
