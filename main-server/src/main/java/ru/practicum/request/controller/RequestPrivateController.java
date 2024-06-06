@@ -24,7 +24,7 @@ public class RequestPrivateController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationDtoOut createRequest(@PathVariable @Positive final long userId,
-                                             @RequestParam(name = "eventId", required = false) @Positive final Long eventId) {
+                                             @RequestParam(required = false) @Positive final long eventId) {
 
         log.info("START endpoint `method:POST /users/{userId}/requests` (create request), event id: {}.", eventId);
 

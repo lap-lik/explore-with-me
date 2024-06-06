@@ -17,7 +17,6 @@ import java.util.List;
 import static ru.practicum.model.StatsConstant.DATE_TIME_PATTERN;
 
 @Slf4j
-@Validated
 @RestController
 @RequiredArgsConstructor
 public class StatsController {
@@ -26,7 +25,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    void createStats(@Valid @RequestBody final StatsDtoIn inputDTO) {
+    public void createStats(@Valid @RequestBody final StatsDtoIn inputDTO) {
 
         log.info("START endpoint `method:POST /hit` (create stats), for uri: {}.", inputDTO.getUri());
 
@@ -34,10 +33,10 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    List<StatsDtoOut> getStats(@RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
-                               @RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime end,
-                               @RequestParam(required = false) List<String> uris,
-                               @RequestParam(defaultValue = "false") boolean unique) {
+    public List<StatsDtoOut> getStats(@RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
+                                      @RequestParam() @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime end,
+                                      @RequestParam(required = false) List<String> uris,
+                                      @RequestParam(defaultValue = "false") boolean unique) {
 
         log.info("START endpoint `method:GET /stats` (get all stats).");
 

@@ -24,7 +24,7 @@ public class Request {
     private Long id;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = DATE_TIME_PATTERN)
+//    @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 
     @ToString.Exclude
@@ -38,5 +38,5 @@ public class Request {
     private User requester;
 
     @Column(nullable = false)
-    private String status;
+    private RequestStatus status;
 }

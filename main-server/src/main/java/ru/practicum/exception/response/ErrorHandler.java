@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.practicum.category.controller.CategoryAdminController;
 import ru.practicum.category.controller.CategoryPublicController;
-import ru.practicum.exception.NotFoundException;
-import ru.practicum.exception.NotImplementedException;
-import ru.practicum.exception.UnsupportedException;
-import ru.practicum.exception.ValidException;
+import ru.practicum.event.controller.EventPrivateController;
+import ru.practicum.exception.*;
 import ru.practicum.user.controller.UserAdminController;
 
 import javax.validation.ConstraintViolationException;
@@ -23,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice(assignableTypes = {CategoryAdminController.class,
         CategoryPublicController.class,
-        UserAdminController.class})
+        UserAdminController.class, EventPrivateController.class})
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -91,6 +89,21 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse onDataIntegrityViolationException(final DataIntegrityViolationException exception) {
 
         log.warn("DataIntegrityViolationException: {}, message(s): \n{}", exception.getClass().getName(),
+                getExceptionMessage(exception));
+
+        return ErrorResponse.builder()
+                .errors(convertStackTraceToStringList(exception))
+                .status(HttpStatus.CONFLICT.name())
+                .reason("Integrity constraint has been violated.")
+                .message(exception.getMessage())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DataConflictException.class)
+    public ErrorResponse onDataConflictException(final DataConflictException exception) {
+
+        log.warn("DataConflictException: {}, message(s): \n{}", exception.getClass().getName(),
                 getExceptionMessage(exception));
 
         return ErrorResponse.builder()

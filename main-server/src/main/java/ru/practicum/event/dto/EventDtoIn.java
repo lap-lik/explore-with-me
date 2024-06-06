@@ -30,7 +30,7 @@ public class EventDtoIn {
     private Boolean paid = false;
 
     @Min(value = 0, message = "The participantLimit field cannot be less than 0.")
-    private int participantLimit = 0;
+    private Integer participantLimit = 0;
 
     private Boolean requestModeration = true;
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventDtoIn;
 import ru.practicum.event.dto.EventDtoOut;
 import ru.practicum.event.dto.EventShortDtoOut;
+import ru.practicum.event.dto.EventUserDtoUpdate;
 import ru.practicum.event.service.EventService;
 import ru.practicum.request.dto.ParticipationDtoOut;
 
@@ -56,11 +57,11 @@ public class EventPrivateController {
     @PatchMapping("/{eventId}")
     public EventDtoOut updateEvent(@PathVariable @Positive final long userId,
                                    @PathVariable @Positive final long eventId,
-                                   @Valid @RequestBody EventDtoIn inputDTO) {
+                                   @Valid @RequestBody EventUserDtoUpdate eventUserDtoUpdate) {
 
         log.info("START endpoint `method:PATCH /users/{userId}/events/{eventId}` (update event by user and event id), event id: {}.", eventId);
 
-        return service.updateByUserAndEventId(userId, eventId, inputDTO);
+        return service.updateByUserAndEventId(userId, eventId, eventUserDtoUpdate);
     }
 
     @GetMapping("/{eventId}/requests")

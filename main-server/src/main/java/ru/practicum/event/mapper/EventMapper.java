@@ -60,6 +60,12 @@ public interface EventMapper {
     })
     EventDtoOut eventToEventDto(Event entity, Long views, Long confirmedRequests);
 
+    @Mappings ({
+            @Mapping(target = "eventDate", source = "entity.eventDate", dateFormat = DATE_TIME_PATTERN),
+            @Mapping(target = "views", ignore = true),
+            @Mapping(target = "confirmedRequests", ignore = true)
+    })
+    EventShortDtoOut eventToEventShortDto(Event entity);
 
 
     List<EventShortDtoOut> eventsToEventShortDtos(List<Event> entities);
