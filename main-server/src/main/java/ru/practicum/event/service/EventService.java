@@ -1,47 +1,30 @@
 package ru.practicum.event.service;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.event.dto.*;
 import ru.practicum.request.dto.ParticipationDtoOut;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static ru.practicum.constant.Constant.DATE_TIME_PATTERN;
 
 public interface EventService {
 
-    EventDtoOut create(long userId, EventDtoIn inputDto);
+    EventDtoOut createByPrivate(long userId, EventDtoIn inputDto);
 
-    List<EventShortDtoOut> getAllByUserId(long userId, int from, int size);
+    EventDtoOut updateByPrivate(long userId, long eventId, EventUserDtoUpdate eventUserDtoUpdate);
 
-    EventDtoOut getByUserAndEventId(long userId, long eventId);
+    EventDtoOut updateByAdmin(long eventId, EventAdminDtoUpdate eventAdminDtoUpdate);
 
-    EventDtoOut updateByUserAndEventId(long userId, long eventId, EventUserDtoUpdate eventUserDtoUpdate);
+    EventRequestStatusUpdateDtoOut updateRequestsByPrivate(long userId, long eventId, EventRequestStatusUpdateDtoIn inputDto);
 
-    List<ParticipationDtoOut> getRequestsByEvent(long userId, long eventId);
+    EventDtoOut getByPublic(long eventId, HttpServletRequest request);
 
-    List<ParticipationDtoOut> updateRequestsByEvent(long userId, long eventId, EventDtoIn inputDto);
+    EventDtoOut getByPrivate(long userId, long eventId, HttpServletRequest request);
 
-    EventDtoOut getById(long eventId, HttpServletRequest request);
+    List<EventShortDtoOut> getAllByPublic(EventPublicFilter filter, boolean onlyAvailable, String sort, int from, int size, HttpServletRequest request);
 
-    List<EventShortDtoOut> search(String text,
-                             List<Long> categories,
-                             Boolean paid,
-                             LocalDateTime rangeStart,
-                             LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from, int size);
+    List<EventShortDtoOut> getAllByPrivate(long userId, int from, int size);
 
-    List<EventDtoOut> getAllByTheAdmin(List<Long> users,
-                                       List<String> states,
-                                       List<Long> categories,
-                                       LocalDateTime rangeStart,
-                                       LocalDateTime rangeEnd,
-                                       int from,
-                                       int size);
+    List<EventDtoOut> getAllByAdmin(EventAdminFilter filter, int from, int size);
 
-    EventDtoOut updateByTheAdmin(long eventId, EventAdminDtoUpdate eventAdminDtoUpdate);
+    List<ParticipationDtoOut> getAllRequestsByPrivate(long userId, long eventId);
 }

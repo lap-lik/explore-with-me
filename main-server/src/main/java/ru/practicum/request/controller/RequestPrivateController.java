@@ -20,11 +20,10 @@ public class RequestPrivateController {
 
     private final RequestService service;
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationDtoOut createRequest(@PathVariable @Positive final long userId,
-                                             @RequestParam(required = false) @Positive final long eventId) {
+                                             @RequestParam Long eventId) {
 
         log.info("START endpoint `method:POST /users/{userId}/requests` (create request), event id: {}.", eventId);
 
@@ -41,11 +40,11 @@ public class RequestPrivateController {
 
 
     @PatchMapping("/{requestId}/cancel")
-    public ParticipationDtoOut updateRequest(@PathVariable @Positive final long userId,
-                                             @PathVariable @Positive final long requestId) {
+    public ParticipationDtoOut canceledRequest(@PathVariable @Positive final long userId,
+                                               @PathVariable @Positive final long requestId) {
 
         log.info("START endpoint `method:PATCH /users/{userId}/requests/{requestId}/cancel` (canceled request by id), request id: {}.", requestId);
 
-        return service.update(userId, requestId);
+        return service.canceled(userId, requestId);
     }
 }

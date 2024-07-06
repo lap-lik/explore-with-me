@@ -5,8 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class EventAdminDtoUpdate extends EventUserDtoUpdate{
-
+public class EventAdminDtoUpdate extends EventUserDtoUpdate {
 
 }
 

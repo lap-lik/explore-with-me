@@ -21,7 +21,7 @@ import java.util.List;
 public class StatsClientImpl implements StatsClient {
 
     private static final String POST_PATCH = "/hit";
-    private static final String GET_PATCH = "/stats?start=%s&end=%s&uris=%s&unique=%s";
+    private static final String GET_PATCH = "/stats";
     private RestTemplate restTemplate;
 
     @Autowired
@@ -35,7 +35,9 @@ public class StatsClientImpl implements StatsClient {
 
     @Override
     public List<StatsDtoOut> getStats(String start, String end, List<String> uris, boolean unique) {
-        String url = String.format(GET_PATCH, start, end, uris, unique);
+
+        String urisParam = uris.isEmpty() ? "" : "&uris=" + String.join(",", uris);
+        String url = String.format("%s?start=%s&end=%s%s&unique=%s", GET_PATCH, start, end, urisParam, unique);
 
         try {
             ResponseEntity<StatsDtoOut[]> response = restTemplate.getForEntity(url, StatsDtoOut[].class);
@@ -58,5 +60,4 @@ public class StatsClientImpl implements StatsClient {
             throw ClientException.builder().message(e.getMessage()).build();
         }
     }
-
 }

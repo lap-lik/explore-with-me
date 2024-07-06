@@ -13,6 +13,7 @@ import static ru.practicum.constant.Constant.DATE_TIME_PATTERN;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,7 +51,7 @@ public class Event {
     private User initiator;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = false)
     private Location location;
 
@@ -67,7 +68,7 @@ public class Event {
     private boolean requestModeration;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Enumerated
     private EventState state;
 
     @Column(nullable = false)

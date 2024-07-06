@@ -32,6 +32,7 @@ public class EventDtoIn {
     @Min(value = 0, message = "The participantLimit field cannot be less than 0.")
     private Integer participantLimit = 0;
 
+    @NotNull(message = "The requestModeration field cannot be null.")
     private Boolean requestModeration = true;
 
     @NotBlank(message = "The title must not be empty.")

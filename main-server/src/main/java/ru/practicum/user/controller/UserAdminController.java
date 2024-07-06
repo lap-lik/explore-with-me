@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Objects;
 
 
 @Slf4j
@@ -38,7 +39,7 @@ public class UserAdminController {
                                      @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                      @RequestParam(defaultValue = "10") @Positive int size) {
 
-        log.info("START endpoint `method:GET /admin/users` (get users by id list), id list size: {}.", ids.size());
+        log.info("START endpoint `method:GET /admin/users` (get users by id list), id list size: {}.", Objects.nonNull(ids) ? ids.size() : null);
 
         return service.getAll(ids, from, size);
     }

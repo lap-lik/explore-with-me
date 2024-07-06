@@ -22,7 +22,7 @@ public class CategoryPublicController {
 
     @GetMapping
     public List<CategoryDtoOut> getAllCategories(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                                 @RequestParam(defaultValue = "20") @Positive int size) {
+                                                 @RequestParam(defaultValue = "10") @Positive int size) {
 
         log.info("START endpoint `method:GET /categories` (get all categories).");
 

@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventDtoOut;
+import ru.practicum.event.dto.EventPublicFilter;
 import ru.practicum.event.dto.EventShortDtoOut;
 import ru.practicum.event.service.EventService;
 
@@ -34,20 +35,29 @@ public class EventPublicController {
                                             @RequestParam(defaultValue = "false") boolean onlyAvailable,
                                             @RequestParam(required = false) String sort,
                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                            @RequestParam(defaultValue = "10") @Positive int size) {
+                                            @RequestParam(defaultValue = "10") @Positive int size,
+                                            HttpServletRequest request) {
 
         log.info("START endpoint `method:GET /events` (event search by parameters).");
 
-        return service.search(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        EventPublicFilter filter = EventPublicFilter.builder()
+                .text(text)
+                .categories(categories)
+                .paid(paid)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .build();
+
+        return service.getAllByPublic(filter, onlyAvailable, sort, from, size, request);
     }
 
     @GetMapping(path = "/{id}")
     public EventDtoOut getEvent(@PathVariable(name = "id") final long eventId,
-                                       HttpServletRequest request) {
+                                HttpServletRequest request) {
 
         log.info("START endpoint `method:GET /events/{id}` (get event by id), event id: {}.", eventId);
 
-        return service.getById(eventId, request);
+        return service.getByPublic(eventId, request);
     }
 
 }

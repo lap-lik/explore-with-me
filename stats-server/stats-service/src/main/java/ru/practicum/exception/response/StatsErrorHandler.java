@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.practicum.controller.StatsController;
 import ru.practicum.exception.ValidException;
 
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice(assignableTypes = StatsController.class)
-public class ErrorHandler extends ResponseEntityExceptionHandler {
+public class StatsErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ValidException.class, ConstraintViolationException.class})

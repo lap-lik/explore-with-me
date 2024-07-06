@@ -5,13 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.event.dto.EventDtoIn;
-import ru.practicum.event.dto.EventDtoOut;
-import ru.practicum.event.dto.EventShortDtoOut;
-import ru.practicum.event.dto.EventUserDtoUpdate;
+import ru.practicum.event.dto.*;
 import ru.practicum.event.service.EventService;
 import ru.practicum.request.dto.ParticipationDtoOut;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -32,7 +30,7 @@ public class EventPrivateController {
                                    @Valid @RequestBody EventDtoIn inputDTO) {
         log.info("START endpoint `method:POST /users/{userId}/events` (create event), event title: {}.", inputDTO.getTitle());
 
-        return service.create(userId, inputDTO);
+        return service.createByPrivate(userId, inputDTO);
     }
 
     @GetMapping
@@ -42,16 +40,17 @@ public class EventPrivateController {
 
         log.info("START endpoint `method:GET /users/{userId}/events` (get events by user id), user id: {}.", userId);
 
-        return service.getAllByUserId(userId, from, size);
+        return service.getAllByPrivate(userId, from, size);
     }
 
     @GetMapping("/{eventId}")
     public EventDtoOut getEvent(@PathVariable @Positive final long userId,
-                                @PathVariable @Positive final long eventId) {
+                                @PathVariable @Positive final long eventId,
+                                HttpServletRequest request) {
 
         log.info("START endpoint `method:GET /users/{userId}/events/{eventId}` (get event by user and event id), event id: {}.", eventId);
 
-        return service.getByUserAndEventId(userId, eventId);
+        return service.getByPrivate(userId, eventId, request);
     }
 
     @PatchMapping("/{eventId}")
@@ -61,7 +60,7 @@ public class EventPrivateController {
 
         log.info("START endpoint `method:PATCH /users/{userId}/events/{eventId}` (update event by user and event id), event id: {}.", eventId);
 
-        return service.updateByUserAndEventId(userId, eventId, eventUserDtoUpdate);
+        return service.updateByPrivate(userId, eventId, eventUserDtoUpdate);
     }
 
     @GetMapping("/{eventId}/requests")
@@ -70,16 +69,16 @@ public class EventPrivateController {
 
         log.info("START endpoint `method:GET /users/{userId}/events/{eventId}/requests` (get requests by user and event id), event id: {}.", eventId);
 
-        return service.getRequestsByEvent(userId, eventId);
+        return service.getAllRequestsByPrivate(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
-    public List<ParticipationDtoOut> updateRequestsByEvent(@PathVariable @Positive final long userId,
-                                   @PathVariable @Positive final long eventId,
-                                   @Valid @RequestBody EventDtoIn inputDTO) {
+    public EventRequestStatusUpdateDtoOut updateRequestsByEvent(@PathVariable @Positive final long userId,
+                                                                @PathVariable @Positive final long eventId,
+                                                                @Valid @RequestBody EventRequestStatusUpdateDtoIn inputDTO) {
 
         log.info("START endpoint `method:PATCH /users/{userId}/events/{eventId}` (update requests by user and event id), event id: {}.", eventId);
 
-        return service.updateRequestsByEvent(userId, eventId, inputDTO);
+        return service.updateRequestsByPrivate(userId, eventId, inputDTO);
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.practicum.StatsClient;
 
 import java.util.Arrays;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice(assignableTypes = StatsClient.class)
-public class StatsErrorHandler extends ResponseEntityExceptionHandler {
+public class StatsClientErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ClientException.class)

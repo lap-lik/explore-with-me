@@ -10,5 +10,5 @@ public interface RequestService {
 
     List<ParticipationDtoOut> getAll(long userId);
 
-    ParticipationDtoOut update(long userId, long requestId);
+    ParticipationDtoOut canceled(long userId, long requestId);
 }

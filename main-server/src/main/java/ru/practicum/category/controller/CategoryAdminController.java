@@ -41,8 +41,7 @@ public class CategoryAdminController {
 
 
     @PatchMapping("/{catId}")
-    public CategoryDtoOut updateCategory(@PathVariable @Positive final long catId,
-                                         @Valid @RequestBody final CategoryDtoIn inputDTO) {
+    public CategoryDtoOut updateCategory(@PathVariable @Positive final long catId, @Valid @RequestBody final CategoryDtoIn inputDTO) {
 
         log.info("START endpoint `method:PATCH /admin/categories/{catId}` (update category), category id: {}.", catId);
 

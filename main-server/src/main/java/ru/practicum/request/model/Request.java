@@ -1,17 +1,15 @@
 package ru.practicum.request.model;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static ru.practicum.constant.Constant.DATE_TIME_PATTERN;
-
 @Entity
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +22,6 @@ public class Request {
     private Long id;
 
     @Column(nullable = false)
-//    @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 
     @ToString.Exclude
@@ -38,5 +35,6 @@ public class Request {
     private User requester;
 
     @Column(nullable = false)
+    @Enumerated
     private RequestStatus status;
 }

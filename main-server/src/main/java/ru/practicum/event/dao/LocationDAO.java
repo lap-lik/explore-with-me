@@ -5,5 +5,4 @@ import ru.practicum.event.model.Location;
 
 public interface LocationDAO extends JpaRepository<Location, Long> {
 
-    Location findByLatitudeAndLongitude(Double latitude, Double longitude);
 }
