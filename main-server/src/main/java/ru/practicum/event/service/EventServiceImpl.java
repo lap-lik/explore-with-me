@@ -328,7 +328,6 @@ public class EventServiceImpl implements EventService {
                 .add(filter.getCategories(), qEvent.category.id::in)
                 .add(filter.getRangeStart(), qEvent.eventDate::after)
                 .add(filter.getRangeEnd(), qEvent.eventDate::before)
-                .add(EventState.PUBLISHED, qEvent.state::eq)
                 .build();
 
         List<EventDtoOut> response = eventMapper.eventsToEventDtos(eventDAO.findAll(predicate, pageable).getContent());

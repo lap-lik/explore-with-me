@@ -36,8 +36,8 @@ public class EventAdminController {
                                        @RequestParam(required = false) List<Long> categories,
                                        @RequestParam(required = false) @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime rangeStart,
                                        @RequestParam(required = false) @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime rangeEnd,
-                                       @PositiveOrZero @RequestParam(defaultValue = "0") int from,
-                                       @Positive @RequestParam(defaultValue = "10") int size) {
+                                       @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                       @RequestParam(defaultValue = "10") @Positive int size) {
 
         log.info("START endpoint `method:GET /admin/events` (get events by the admin).");
 
