@@ -3,7 +3,6 @@ package ru.practicum.event.service;
 import ru.practicum.event.dto.*;
 import ru.practicum.request.dto.ParticipationDtoOut;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface EventService {
@@ -16,11 +15,11 @@ public interface EventService {
 
     EventRequestStatusUpdateDtoOut updateRequestsByPrivate(long userId, long eventId, EventRequestStatusUpdateDtoIn inputDto);
 
-    EventDtoOut getByPublic(long eventId, HttpServletRequest request);
+    EventDtoOut getByPublic(long eventId, String ip, String uri);
 
-    EventDtoOut getByPrivate(long userId, long eventId, HttpServletRequest request);
+    EventDtoOut getByPrivate(long userId, long eventId, String ip, String uri);
 
-    List<EventShortDtoOut> getAllByPublic(EventPublicFilter filter, boolean onlyAvailable, String sort, int from, int size, HttpServletRequest request);
+    List<EventShortDtoOut> getAllByPublic(EventPublicFilter filter, boolean onlyAvailable, String sort, int from, int size, String ip, String uri);
 
     List<EventShortDtoOut> getAllByPrivate(long userId, int from, int size);
 

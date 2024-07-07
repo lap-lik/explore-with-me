@@ -27,7 +27,6 @@ import ru.practicum.user.dao.UserDAO;
 import ru.practicum.util.EwmPageRequest;
 import ru.practicum.util.QPredicateBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -195,7 +194,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDtoOut getByPublic(long eventId, HttpServletRequest request) {
+    public EventDtoOut getByPublic(long eventId, String ip, String uri) {
 
         Event event = eventDAO.findById(eventId).orElseThrow(() -> NotFoundException.builder()
                 .message(String.format("The event with the ID=`%d`", eventId))
@@ -211,13 +210,13 @@ public class EventServiceImpl implements EventService {
         Long confirmedEventRequests = getConfirmedEventRequestsMap(eventIds).getOrDefault(eventId, 0L);
         Long views = getEventViewsMap(eventIds, LocalDateTime.now().minusYears(1), LocalDateTime.now(), true)
                 .getOrDefault(eventId, 0L);
-        addHit(request);
+        addHit(ip, uri);
 
         return eventMapper.eventToEventDto(event, views, confirmedEventRequests);
     }
 
     @Override
-    public EventDtoOut getByPrivate(long userId, long eventId, HttpServletRequest request) {
+    public EventDtoOut getByPrivate(long userId, long eventId, String ip, String uri) {
 
         checkExistsUserById(userId);
 
@@ -231,14 +230,14 @@ public class EventServiceImpl implements EventService {
                 .getOrDefault(eventId, 0L);
 
         if (!Objects.equals(userId, event.getInitiator().getId())) {
-            addHit(request);
+            addHit(ip, uri);
         }
 
         return eventMapper.eventToEventDto(event, views, confirmedEventRequests);
     }
 
     @Override
-    public List<EventShortDtoOut> getAllByPublic(EventPublicFilter filter, boolean onlyAvailable, String sort, int from, int size, HttpServletRequest request) {
+    public List<EventShortDtoOut> getAllByPublic(EventPublicFilter filter, boolean onlyAvailable, String sort, int from, int size, String ip, String uri) {
 
         checkEventFilter(filter);
 
@@ -281,7 +280,7 @@ public class EventServiceImpl implements EventService {
 
         Comparator<EventShortDtoOut> comparator = getEventShortDtoOutComparator(sort);
 
-        addHit(request);
+        addHit(ip, uri);
         return response.stream()
                 .sorted(comparator)
                 .collect(Collectors.toList());
@@ -362,10 +361,8 @@ public class EventServiceImpl implements EventService {
         return requestMapper.entitiesToDtos(requests);
     }
 
-    private void addHit(HttpServletRequest request) {
+    private void addHit(String ip, String uri) {
 
-        String ip = request.getRemoteAddr();
-        String uri = request.getRequestURI();
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
         StatsDtoIn statsDtoIn = StatsDtoIn.builder()
                 .app("ewm-main-service")

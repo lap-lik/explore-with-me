@@ -48,7 +48,10 @@ public class EventPublicController {
                 .rangeEnd(rangeEnd)
                 .build();
 
-        return service.getAllByPublic(filter, onlyAvailable, sort, from, size, request);
+        String ip = request.getRemoteAddr();
+        String uri = request.getRequestURI();
+
+        return service.getAllByPublic(filter, onlyAvailable, sort, from, size, ip, uri);
     }
 
     @GetMapping(path = "/{id}")
@@ -57,7 +60,10 @@ public class EventPublicController {
 
         log.info("START endpoint `method:GET /events/{id}` (get event by id), event id: {}.", eventId);
 
-        return service.getByPublic(eventId, request);
+        String ip = request.getRemoteAddr();
+        String uri = request.getRequestURI();
+
+        return service.getByPublic(eventId, ip, uri);
     }
 
 }

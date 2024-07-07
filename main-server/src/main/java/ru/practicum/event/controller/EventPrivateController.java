@@ -50,7 +50,10 @@ public class EventPrivateController {
 
         log.info("START endpoint `method:GET /users/{userId}/events/{eventId}` (get event by user and event id), event id: {}.", eventId);
 
-        return service.getByPrivate(userId, eventId, request);
+        String ip = request.getRemoteAddr();
+        String uri = request.getRequestURI();
+
+        return service.getByPrivate(userId, eventId, ip, uri);
     }
 
     @PatchMapping("/{eventId}")

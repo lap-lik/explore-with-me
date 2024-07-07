@@ -45,11 +45,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public CompilationOutputDTO updateByAdmin(long compId, CompilationUpdateDto updateDto) {
 
-        Compilation compilation = compilationDAO.findById(compId)
-                .orElseThrow(() -> NotFoundException.builder()
-                        .message(String.format("The compilation with the ID=`%d` was not found.", compId))
-                        .build());
-
+        Compilation compilation = getCompilation(compId);
         Compilation updatedCompilation = compilationMapper.update(updateDto, compilation);
         Compilation savedCompilation = compilationDAO.save(updatedCompilation);
 
@@ -68,12 +64,15 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationOutputDTO getByPublic(Long compId) {
 
-        Compilation compilation = compilationDAO.findById(compId)
+        return compilationMapper.entityToOutputDto(getCompilation(compId));
+    }
+
+    private Compilation getCompilation(Long compId) {
+
+        return compilationDAO.findById(compId)
                 .orElseThrow(() -> NotFoundException.builder()
                         .message(String.format("The compilation with the ID=`%d` was not found.", compId))
                         .build());
-
-        return compilationMapper.entityToOutputDto(compilation);
     }
 
     private void checkExistsCompilationById(long compId) {

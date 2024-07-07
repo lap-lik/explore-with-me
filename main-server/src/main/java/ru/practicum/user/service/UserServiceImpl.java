@@ -60,8 +60,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkExistsUserById(long userId) {
 
-        boolean isExist = dao.existsById(userId);
-        if (!isExist) {
+        if (!dao.existsById(userId)) {
             throw NotFoundException.builder()
                     .message(String.format("The user with the ID=`%d` was not found.", userId))
                     .build();
