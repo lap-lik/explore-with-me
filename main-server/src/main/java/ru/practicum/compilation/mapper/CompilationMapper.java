@@ -1,9 +1,9 @@
 package ru.practicum.compilation.mapper;
 
 import org.mapstruct.*;
-import ru.practicum.compilation.dto.CompilationInputDTO;
-import ru.practicum.compilation.dto.CompilationOutputDTO;
-import ru.practicum.compilation.dto.CompilationUpdateDto;
+import ru.practicum.compilation.dto.CompilationDtoIn;
+import ru.practicum.compilation.dto.CompilationDtoOut;
+import ru.practicum.compilation.dto.CompilationDtoUpdate;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public interface CompilationMapper {
 
     @Mapping(target = "events", source = "events", qualifiedByName = "mapToEventSet")
-    Compilation inputDtoToEntity(CompilationInputDTO inputDTO);
+    Compilation inputDtoToEntity(CompilationDtoIn inputDTO);
 
     @Named("mapToEventSet")
     default Set<Event> mapToEventSet(Set<Long> events) {
@@ -35,10 +35,10 @@ public interface CompilationMapper {
                 .collect(Collectors.toSet());
     }
 
-    CompilationOutputDTO entityToOutputDto(Compilation compilation);
+    CompilationDtoOut entityToOutputDto(Compilation compilation);
 
-    List<CompilationOutputDTO> entitiesToOutputDtos(List<Compilation> compilation);
+    List<CompilationDtoOut> entitiesToOutputDtos(List<Compilation> compilation);
 
     @Mapping(target = "events", source = "events", qualifiedByName = "mapToEventSet")
-    Compilation update(CompilationUpdateDto dto, @MappingTarget Compilation compilation);
+    Compilation update(CompilationDtoUpdate dto, @MappingTarget Compilation compilation);
 }

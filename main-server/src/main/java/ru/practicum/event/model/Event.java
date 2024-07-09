@@ -33,7 +33,6 @@ public class Event {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
-    @CreationTimestamp
     @Column(name = "created_on", nullable = false)
     @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime createdOn;

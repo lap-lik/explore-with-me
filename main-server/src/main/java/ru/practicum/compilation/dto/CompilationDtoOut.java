@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompilationOutputDTO {
+public class CompilationDtoOut {
 
     private Long id;
     private List<EventShortDtoOut> events;

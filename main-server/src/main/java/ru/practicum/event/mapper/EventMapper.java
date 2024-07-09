@@ -1,6 +1,7 @@
 package ru.practicum.event.mapper;
 
 import org.mapstruct.*;
+import ru.practicum.comment.dto.CommentDtoOut;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
@@ -68,7 +69,7 @@ public interface EventMapper {
             @Mapping(target = "views", source = "views", defaultValue = "0L"),
             @Mapping(target = "confirmedRequests", source = "confirmedRequests", defaultValue = "0L")
     })
-    EventDtoOut eventToEventDto(Event entity, Long views, Long confirmedRequests);
+    EventDtoOut eventToEventDto(Event entity, List<CommentDtoOut> comments, Long views, Long confirmedRequests);
 
     @Mappings({
             @Mapping(target = "eventDate", source = "entity.eventDate", dateFormat = DATE_TIME_PATTERN),

@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompilationUpdateDto {
+public class CompilationDtoUpdate {
 
     private Set<Long> events;
     private Boolean pinned;

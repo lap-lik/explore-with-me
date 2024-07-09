@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.compilation.dto.CompilationInputDTO;
-import ru.practicum.compilation.dto.CompilationOutputDTO;
-import ru.practicum.compilation.dto.CompilationUpdateDto;
+import ru.practicum.compilation.dto.CompilationDtoIn;
+import ru.practicum.compilation.dto.CompilationDtoOut;
+import ru.practicum.compilation.dto.CompilationDtoUpdate;
 import ru.practicum.compilation.service.CompilationService;
 
 import javax.validation.Valid;
@@ -23,7 +23,7 @@ public class CompilationAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CompilationOutputDTO createCompilation(@Valid @RequestBody final CompilationInputDTO inputDTO) {
+    public CompilationDtoOut createCompilation(@Valid @RequestBody final CompilationDtoIn inputDTO) {
 
         log.info("START endpoint `method:POST /admin/compilations` (create compilation), compilation title: {}.", inputDTO.getTitle());
 
@@ -41,8 +41,8 @@ public class CompilationAdminController {
 
 
     @PatchMapping("/{compId}")
-    public CompilationOutputDTO updateCompilation(@PathVariable long compId,
-                                                  @Valid @RequestBody final CompilationUpdateDto inputDTO) {
+    public CompilationDtoOut updateCompilation(@PathVariable long compId,
+                                               @Valid @RequestBody final CompilationDtoUpdate inputDTO) {
 
         log.info("START endpoint `method:PATCH /admin/compilations/{compId}` (update compilation), compilation id: {}.", compId);
 

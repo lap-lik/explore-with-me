@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.compilation.dto.CompilationOutputDTO;
+import ru.practicum.compilation.dto.CompilationDtoOut;
 import ru.practicum.compilation.service.CompilationService;
 
 import javax.validation.constraints.Positive;
@@ -21,9 +21,9 @@ public class CompilationPublicController {
     private final CompilationService service;
 
     @GetMapping
-    public List<CompilationOutputDTO> getAllCompilations(@RequestParam(defaultValue = "false") boolean pinned,
-                                                         @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                                         @RequestParam(defaultValue = "10") @Positive int size) {
+    public List<CompilationDtoOut> getAllCompilations(@RequestParam(defaultValue = "false") boolean pinned,
+                                                      @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                      @RequestParam(defaultValue = "10") @Positive int size) {
 
         log.info("START endpoint `method:GET /compilations` (compilation search by parameters).");
 
@@ -31,7 +31,7 @@ public class CompilationPublicController {
     }
 
     @GetMapping("/{compId}")
-    public CompilationOutputDTO getCompilation(@PathVariable Long compId) {
+    public CompilationDtoOut getCompilation(@PathVariable Long compId) {
 
         log.info("START endpoint `method:GET /compilations/{compId}` (get compilation by id), compilation id: {}.", compId);
 

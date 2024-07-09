@@ -1,20 +1,20 @@
 package ru.practicum.compilation.service;
 
-import ru.practicum.compilation.dto.CompilationInputDTO;
-import ru.practicum.compilation.dto.CompilationOutputDTO;
-import ru.practicum.compilation.dto.CompilationUpdateDto;
+import ru.practicum.compilation.dto.CompilationDtoIn;
+import ru.practicum.compilation.dto.CompilationDtoOut;
+import ru.practicum.compilation.dto.CompilationDtoUpdate;
 
 import java.util.List;
 
 public interface CompilationService {
 
-    CompilationOutputDTO createByAdmin(CompilationInputDTO inputDTO);
+    CompilationDtoOut createByAdmin(CompilationDtoIn inputDTO);
 
     void deleteByAdmin(long compId);
 
-    CompilationOutputDTO updateByAdmin(long compId, CompilationUpdateDto updateDto);
+    CompilationDtoOut updateByAdmin(long compId, CompilationDtoUpdate updateDto);
 
-    List<CompilationOutputDTO> getAllByPublic(boolean pinned, int from, int size);
+    List<CompilationDtoOut> getAllByPublic(boolean pinned, int from, int size);
 
-    CompilationOutputDTO getByPublic(Long compId);
+    CompilationDtoOut getByPublic(Long compId);
 }
