@@ -1,7 +1,6 @@
 package ru.practicum.event.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
