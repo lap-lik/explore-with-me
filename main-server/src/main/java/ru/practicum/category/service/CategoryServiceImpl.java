@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
                         .build());
         savedCategory.setName(inputDTO.getName());
 
-        return mapper.entityToOutputDTO(categoryDAO.save(savedCategory));
+        return mapper.entityToOutputDTO(savedCategory);
     }
 
     @Override

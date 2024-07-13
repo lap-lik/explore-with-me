@@ -102,9 +102,8 @@ public class RequestServiceImpl implements RequestService {
                     .build();
         }
         request.setStatus(RequestStatus.CANCELED);
-        Request savedRequest = requestDAO.save(request);
 
-        return requestMapper.entityToDto(savedRequest);
+        return requestMapper.entityToDto(request);
     }
 
     private void checkExistsUserById(long userId) {

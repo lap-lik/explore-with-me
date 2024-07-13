@@ -97,7 +97,6 @@ public class EventServiceImpl implements EventService {
             updateEventCategory(categoryId, event);
         }
         Event updatedEvent = eventMapper.update(eventUserDtoUpdate, event);
-        eventDAO.save(updatedEvent);
 
         return eventMapper.eventToEventDto(updatedEvent);
     }
@@ -129,7 +128,6 @@ public class EventServiceImpl implements EventService {
         }
 
         Event updatedEvent = eventMapper.update(eventAdminDtoUpdate, event);
-        eventDAO.save(updatedEvent);
 
         return eventMapper.eventToEventDto(updatedEvent);
     }
@@ -183,8 +181,6 @@ public class EventServiceImpl implements EventService {
                 }
             }
         }
-
-        requestDAO.saveAll(updatingRequests);
 
         List<ParticipationDtoOut> confirmedParticipationDto = requestMapper.entitiesToDtos(confirmedRequests);
         List<ParticipationDtoOut> rejectedParticipationDto = requestMapper.entitiesToDtos(rejectedRequests);

@@ -35,9 +35,8 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = getCommentById(commentId);
         comment.setState(inputDTO.getState());
-        Comment updatedComment = commentDAO.save(comment);
 
-        return commentMapper.entityToDto(updatedComment);
+        return commentMapper.entityToDto(comment);
     }
 
     @Override
@@ -70,9 +69,8 @@ public class CommentServiceImpl implements CommentService {
             comment.setText(text);
         }
         comment.setState(CommentState.MODIFIED);
-        Comment updatedComment = commentDAO.save(comment);
 
-        return commentMapper.entityToDto(updatedComment);
+        return commentMapper.entityToDto(comment);
     }
 
     @Override

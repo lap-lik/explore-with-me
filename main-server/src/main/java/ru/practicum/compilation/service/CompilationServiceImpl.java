@@ -47,9 +47,8 @@ public class CompilationServiceImpl implements CompilationService {
 
         Compilation compilation = getCompilation(compId);
         Compilation updatedCompilation = compilationMapper.update(updateDto, compilation);
-        Compilation savedCompilation = compilationDAO.save(updatedCompilation);
 
-        return compilationMapper.entityToOutputDto(savedCompilation);
+        return compilationMapper.entityToOutputDto(updatedCompilation);
     }
 
     @Override
