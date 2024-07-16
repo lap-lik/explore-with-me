@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompilationInputDTO {
+public class CompilationDtoIn {
 
     private Set<Long> events;
     private boolean pinned;

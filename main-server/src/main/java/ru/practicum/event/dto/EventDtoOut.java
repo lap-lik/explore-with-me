@@ -2,8 +2,11 @@ package ru.practicum.event.dto;
 
 import lombok.Data;
 import ru.practicum.category.dto.CategoryDtoOut;
+import ru.practicum.comment.dto.CommentDtoOut;
 import ru.practicum.event.model.EventState;
 import ru.practicum.user.dto.UserShortDtoOut;
+
+import java.util.List;
 
 @Data
 public class EventDtoOut {
@@ -39,4 +42,6 @@ public class EventDtoOut {
     private String title;
 
     private Long views;
+
+    private List<CommentDtoOut> comments;
 }

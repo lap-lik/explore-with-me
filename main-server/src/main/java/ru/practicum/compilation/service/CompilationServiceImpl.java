@@ -5,9 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.dao.CompilationDAO;
-import ru.practicum.compilation.dto.CompilationInputDTO;
-import ru.practicum.compilation.dto.CompilationOutputDTO;
-import ru.practicum.compilation.dto.CompilationUpdateDto;
+import ru.practicum.compilation.dto.CompilationDtoIn;
+import ru.practicum.compilation.dto.CompilationDtoOut;
+import ru.practicum.compilation.dto.CompilationDtoUpdate;
 import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.exception.NotFoundException;
@@ -25,7 +25,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationOutputDTO createByAdmin(CompilationInputDTO inputDTO) {
+    public CompilationDtoOut createByAdmin(CompilationDtoIn inputDTO) {
 
         Compilation compilation = compilationMapper.inputDtoToEntity(inputDTO);
         Compilation savedCompilation = compilationDAO.save(compilation);
@@ -43,17 +43,16 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationOutputDTO updateByAdmin(long compId, CompilationUpdateDto updateDto) {
+    public CompilationDtoOut updateByAdmin(long compId, CompilationDtoUpdate updateDto) {
 
         Compilation compilation = getCompilation(compId);
         Compilation updatedCompilation = compilationMapper.update(updateDto, compilation);
-        Compilation savedCompilation = compilationDAO.save(updatedCompilation);
 
-        return compilationMapper.entityToOutputDto(savedCompilation);
+        return compilationMapper.entityToOutputDto(updatedCompilation);
     }
 
     @Override
-    public List<CompilationOutputDTO> getAllByPublic(boolean pinned, int from, int size) {
+    public List<CompilationDtoOut> getAllByPublic(boolean pinned, int from, int size) {
 
         Pageable pageable = EwmPageRequest.of(from, size);
         List<Compilation> compilations = compilationDAO.findAllByPinned(pinned, pageable).getContent();
@@ -62,7 +61,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationOutputDTO getByPublic(Long compId) {
+    public CompilationDtoOut getByPublic(Long compId) {
 
         return compilationMapper.entityToOutputDto(getCompilation(compId));
     }

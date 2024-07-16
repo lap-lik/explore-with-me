@@ -11,6 +11,11 @@ import ru.practicum.StatsDtoIn;
 import ru.practicum.StatsDtoOut;
 import ru.practicum.category.dao.CategoryDAO;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.dao.CommentDAO;
+import ru.practicum.comment.dto.CommentDtoOut;
+import ru.practicum.comment.mapper.CommentMapper;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.model.CommentState;
 import ru.practicum.event.dao.EventDAO;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.mapper.EventMapper;
@@ -44,8 +49,10 @@ public class EventServiceImpl implements EventService {
     private final RequestDAO requestDAO;
     private final UserDAO userDAO;
     private final CategoryDAO categoryDAO;
+    private final CommentDAO commentDAO;
     private final EventMapper eventMapper;
     private final RequestMapper requestMapper;
+    private final CommentMapper commentMapper;
     private final StatsClientImpl statsClient;
 
     @Override
@@ -90,7 +97,6 @@ public class EventServiceImpl implements EventService {
             updateEventCategory(categoryId, event);
         }
         Event updatedEvent = eventMapper.update(eventUserDtoUpdate, event);
-        eventDAO.save(updatedEvent);
 
         return eventMapper.eventToEventDto(updatedEvent);
     }
@@ -122,7 +128,6 @@ public class EventServiceImpl implements EventService {
         }
 
         Event updatedEvent = eventMapper.update(eventAdminDtoUpdate, event);
-        eventDAO.save(updatedEvent);
 
         return eventMapper.eventToEventDto(updatedEvent);
     }
@@ -177,8 +182,6 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        requestDAO.saveAll(updatingRequests);
-
         List<ParticipationDtoOut> confirmedParticipationDto = requestMapper.entitiesToDtos(confirmedRequests);
         List<ParticipationDtoOut> rejectedParticipationDto = requestMapper.entitiesToDtos(rejectedRequests);
 
@@ -207,12 +210,13 @@ public class EventServiceImpl implements EventService {
         }
 
         List<Long> eventIds = List.of(eventId);
+        List<CommentDtoOut> comments = getCommentsMap(eventIds).getOrDefault(eventId, Collections.emptyList());
         Long confirmedEventRequests = getConfirmedEventRequestsMap(eventIds).getOrDefault(eventId, 0L);
         Long views = getEventViewsMap(eventIds, LocalDateTime.now().minusYears(1), LocalDateTime.now(), true)
                 .getOrDefault(eventId, 0L);
         addHit(ip, uri);
 
-        return eventMapper.eventToEventDto(event, views, confirmedEventRequests);
+        return eventMapper.eventToEventDto(event, comments, views, confirmedEventRequests);
     }
 
     @Override
@@ -225,6 +229,7 @@ public class EventServiceImpl implements EventService {
                 .build());
 
         List<Long> eventIds = List.of(eventId);
+        List<CommentDtoOut> comments = getCommentsMap(eventIds).getOrDefault(eventId, Collections.emptyList());
         Long confirmedEventRequests = getConfirmedEventRequestsMap(eventIds).getOrDefault(eventId, 0L);
         Long views = getEventViewsMap(eventIds, LocalDateTime.now().minusYears(1), LocalDateTime.now(), true)
                 .getOrDefault(eventId, 0L);
@@ -233,7 +238,7 @@ public class EventServiceImpl implements EventService {
             addHit(ip, uri);
         }
 
-        return eventMapper.eventToEventDto(event, views, confirmedEventRequests);
+        return eventMapper.eventToEventDto(event, comments, views, confirmedEventRequests);
     }
 
     @Override
@@ -336,6 +341,7 @@ public class EventServiceImpl implements EventService {
         }
 
         List<Long> eventsIds = response.stream().map(EventDtoOut::getId).collect(Collectors.toList());
+        Map<Long, List<CommentDtoOut>> commentsMap = getCommentsMap(eventsIds);
         Map<Long, Long> confirmedEventRequestsMap = getConfirmedEventRequestsMap(eventsIds);
         Map<Long, Long> eventViewsMap = getEventViewsMap(eventsIds, LocalDateTime.now().minusYears(1), LocalDateTime.now(), true);
 
@@ -343,6 +349,7 @@ public class EventServiceImpl implements EventService {
             Long eventId = event.getId();
             event.setViews(eventViewsMap.getOrDefault(eventId, 0L));
             event.setConfirmedRequests(confirmedEventRequestsMap.getOrDefault(eventId, 0L));
+            event.setComments(commentsMap.getOrDefault(eventId, Collections.emptyList()));
         }).collect(Collectors.toList());
     }
 
@@ -446,6 +453,31 @@ public class EventServiceImpl implements EventService {
         return requestDAO.findAllByEvent_IdInAndStatus(eventsIds, RequestStatus.CONFIRMED).stream()
                 .collect(Collectors.groupingBy(request -> request.getEvent().getId(),
                         Collectors.summingLong(request -> 1)));
+    }
+
+    private Map<Long, List<CommentDtoOut>> getCommentsMap(List<Long> eventIds) {
+
+        List<Comment> comments = commentDAO.findByEvent_IdIn(eventIds);
+        Map<Long, CommentDtoOut> commentsMap = new HashMap<>();
+        for (Comment comment : comments) {
+            CommentState state = comment.getState();
+            switch (state) {
+                case DELETED:
+                    comment.setText(CommentState.DELETED.toString());
+                    break;
+                case BLOCKED:
+                    comment.setText(CommentState.BLOCKED.toString());
+                    break;
+            }
+            if (Objects.nonNull(comment.getParentComment())) {
+                commentsMap.get(comment.getParentComment().getId()).getComments().add(commentMapper.entityToDto(comment));
+            } else {
+                commentsMap.put(comment.getId(), commentMapper.entityToDto(comment));
+            }
+        }
+
+        return commentsMap.values().stream()
+                .collect(Collectors.groupingBy(CommentDtoOut::getEventId));
     }
 
     private void checkEventFilter(EventFilter filter) {

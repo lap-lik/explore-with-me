@@ -1,7 +1,6 @@
 package ru.practicum.event.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
@@ -33,7 +32,6 @@ public class Event {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
-    @CreationTimestamp
     @Column(name = "created_on", nullable = false)
     @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime createdOn;
